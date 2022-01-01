@@ -1,21 +1,13 @@
-name: Publish Docker image
-on:
-  push:
-    tags:
-      - '*'
-jobs:
-  push_to_registry:
-    name: Push Docker image to GitHub Packages
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        name: Check out code
+name: container
+on: push
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        with:
-          image: random_deployer
-          registry: ghcr.io
-#          githubOrg: override-org # optional
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
-          dockerfile: docker/Dockerfile
+jobs:
+  node-docker:
+    runs-on: ubuntu-latest
+    container:
+      image: node:14.15.0-alpine3.12
+    steps:
+         - name: Log the node version
+           run: |
+             node -v
+             cat /etc/os-release
