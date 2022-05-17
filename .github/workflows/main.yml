@@ -37,4 +37,5 @@ jobs:
     - name: Install amplify
       run: |
          npm install -g aws-amplify@4.3.12
+         export PATH="$HOME/.amplify/bin:$PATH"
          amplify
