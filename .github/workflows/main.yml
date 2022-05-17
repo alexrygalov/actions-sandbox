@@ -36,7 +36,5 @@ jobs:
         sed -i .bak "s/MARKETING_VERSION[ ].*/MARKETING_VERSION = ${{ env.RELEASE_VERSION }};/g" ios/SchoolyMobile.xcodeproj/project.pbxproj
     - name: Install amplify
       run: |
-         export PATH="$PATH:$(npm bin -g)"
-         echo $PATH
-         npm install -g aws-amplify@4.3.12
+         npm install -g @aws-amplify/cli@8.2.0
          amplify
