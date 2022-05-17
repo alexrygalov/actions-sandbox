@@ -30,15 +30,11 @@ jobs:
         echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
     - name: Test
       run: |
-        echo $RELEASE_VERSION
         echo ${{ env.RELEASE_VERSION }}
     - name: Update the version
       run: |
         sed -i .bak "s/MARKETING_VERSION[ ].*/MARKETING_VERSION = ${{ env.RELEASE_VERSION }};/g" ios/SchoolyMobile.xcodeproj/project.pbxproj
-    - name: Read project.pbxproj
-      id: package
-      uses: juliangruber/read-file-action@v1
-      with:
-        path: ios/SchoolyMobile.xcodeproj/project.pbxproj
-    - name: Echo project.pbxproj
-      run: echo "${{ steps.package.outputs.content }}"
+    - name: Install amplify
+      run: |
+         npm install -g aws-amplify@4.3.12
+         amplify
