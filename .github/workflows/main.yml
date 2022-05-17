@@ -34,7 +34,7 @@ jobs:
         echo ${{ env.RELEASE_VERSION }}
     - name: Update the version
       run: |
-        sed -i "s/MARKETING_VERSION[ ].*/MARKETING_VERSION = ${{ env.RELEASE_VERSION }};/g" ios/SchoolyMobile.xcodeproj/project.pbxproj
+        sed -i .bak "s/MARKETING_VERSION[ ].*/MARKETING_VERSION = ${{ env.RELEASE_VERSION }};/g" ios/SchoolyMobile.xcodeproj/project.pbxproj
     - name: Read project.pbxproj
       id: package
       uses: juliangruber/read-file-action@v1
