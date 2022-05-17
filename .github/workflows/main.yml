@@ -32,3 +32,13 @@ jobs:
       run: |
         echo $RELEASE_VERSION
         echo ${{ env.RELEASE_VERSION }}
+    - name: Update the version
+      run: |
+        sed -i .bak "s/MARKETING_VERSION[ ].*/MARKETING_VERSION = $ENVV;/g" ios/SchoolyMobile.xcodeproj/project.pbxproj
+    - name: Read project.pbxproj
+      id: package
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ios/SchoolyMobile.xcodeproj/project.pbxproj
+    - name: Echo project.pbxproj
+      run: echo "${{ steps.package.outputs.content }}"
