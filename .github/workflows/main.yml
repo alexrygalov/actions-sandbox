@@ -12,7 +12,7 @@ on:
 
 jobs:
   check_environment:
-    runs-on: macos-10.15
+    runs-on: macOS-12
     steps:
     - name: Check for valid env
 #      if: startsWith(github.ref, 'refs/heads/environment/')
@@ -38,3 +38,4 @@ jobs:
       run: |
          npm install -g @aws-amplify/cli@8.2.0
          amplify
+        aws amplify list-apps --profile $AWS_PROFILE --region $AWS_REGION | jq -r '.apps[] | select(.appId) | .appId'
