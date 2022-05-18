@@ -20,9 +20,9 @@ jobs:
       - name: Check for valid env
         run: |
           if [[ $(git rev-parse --abbrev-ref HEAD) == *tag_* ]]; then echo "ENVIRONMENT=true" >> $GITHUB_ENV; else exit 0; fi
-          export branch_name=$(git rev-parse --abbrev-ref HEAD)
-          echo $branch_name
-          echo $GITHUB_ENV
+#          export branch_name=$(git rev-parse --abbrev-ref HEAD)
+#          echo $branch_name
+#          echo $GITHUB_ENV
       - name: Fail job if not in the right branch
         if: ${{ env.ENVIRONMENT == '' }}
         run: |
