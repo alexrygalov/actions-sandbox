@@ -12,31 +12,22 @@ on:
 
 jobs:
   check_environment:
-    runs-on: ubuntu-latest
+    # uses beta image https://github.com/actions/virtual-environments/issues/5446
+    runs-on: macOS-12
     steps:
-      - name: Check for valid env
-        if: startsWith(github.ref, 'refs/heads/environment/')
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get Branch
         run: |
-          echo "ENVIRONMENT=true" >> $GITHUB_ENV
-      - name: Fail job if not in the right branch
-        if: ${{ env.ENVIRONMENT == '' }}
-        run: |
-          echo "Wrong environment name set"
-          exit 1
-
-
-#jobs:
-#  check_environment:
-#    # uses beta image https://github.com/actions/virtual-environments/issues/5446
-#    runs-on: macOS-12
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 0
+          raw=$(git branch -r --contains ${{ github.ref }})
+          branch=${raw/origin\/}
+          echo ::set-env name=BRANCH::$branch
+      - run: echo ${{ env.BRANCH }}
 #      - name: Check for valid env
 #        run: |
-#           git rev-parse --abbrev-ref HEAD
+#          git rev-parse --abbrev-ref HEAD
 #          export branch_name=$(git rev-parse --abbrev-ref HEAD)
 #          echo $branch_name
 #          echo $GITHUB_ENV
@@ -45,6 +36,8 @@ jobs:
 #        run: |
 #          echo "Wrong environment name set"
 #          exit 1
+
+
 #    - name: Check for valid env
 ##      if: startsWith(github.ref, 'refs/heads/environment/')
 #      run: |
