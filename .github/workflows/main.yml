@@ -21,11 +21,9 @@ jobs:
           fetch-depth: 0
       - name: Get Branch
         run: |
-          raw=$(git branch -r --contains ${{ github.ref }})
-          echo $raw
-          branch=${raw/origin\/}
-          echo "BRANCH=$branch" >> $GITHUB_ENV
-          echo $branch
+          raw=$(git branch -r --contains ${{ github.ref }} | awk '{print $NF}' FS=/)
+          echo "BRANCH=${raw/origin\/}" >> $GITHUB_ENV
+          echo $BRANCH
       - run: echo ${{ env.BRANCH }}
 #      - name: Check for valid env
 #        run: |
