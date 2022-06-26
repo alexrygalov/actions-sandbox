@@ -1,21 +1,51 @@
-name: Publish Docker image
+name: build-and-deploy
+
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - develop2
+      - environment/**
+      - '!environment/prod-**'
+  workflow_dispatch:
+    inputs:
+      maintenanceMode:
+        description: "Maintenance Mode"
+        required: true
+        default: 'false'
+
 jobs:
-  push_to_registry:
-    name: Push Docker image to GitHub Packages
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        name: Check out code
+    - uses: actions/checkout@v3
+    - run: npm ci
+    - uses: nelonoel/branch-name@v1.0.1
+    # Use branch name for whatever purpose
+    - run: echo ${BRANCH_NAME}
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        with:
-          image: random_deployer
-          registry: ghcr.io
-#          githubOrg: override-org # optional
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
-          dockerfile: docker/Dockerfile
+# jobs:
+#   check_environment:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Check for valid env
+#       if: startsWith(github.ref, 'refs/heads/environment/')
+#       run: |
+#         echo "ENVIRONMENT=true" >> $GITHUB_ENV
+#     - name: Fail job if not in the right branch
+#       if: ${{ env.ENVIRONMENT == '' }}
+#       run: |
+#         echo "Wrong environment name set"
+#         exit 1
+#
+#   build_test_deploy:
+#     needs: check_environment
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v3
+#     - name: Set environment variable and current repository
+#       run: |
+#         echo
+# #         echo "ENVIRONMENT=${GITHUB_REF#refs/*/environment/}" >> $GITHUB_ENV
+# #         echo "REPOSITORY=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+# #         echo "CLI_AWS_REGION=eu-west-1" >> $GITHUB_ENV
