@@ -2,64 +2,55 @@ name: build-and-deploy
 
 on:
   push:
-#    branches:
-#      - environment/**
-#      - '!environment/prod-**'
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - 2
-      - 1.*
+    branches:
+      - develop2
+      - environment/**
+      - '!environment/prod-**'
+  workflow_dispatch:
+    inputs:
+      maintenanceMode:
+        description: "Maintenance Mode"
+        required: true
+        default: 'false'
 
 jobs:
-  check_environment:
-    # uses beta image https://github.com/actions/virtual-environments/issues/5446
-    runs-on: macOS-12
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Get Branch
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v5.2
+
+      - name: Running on the default branch.
+        if: steps.branch-name.outputs.is_default == 'true'
         run: |
-          raw=$(git branch -r --contains ${{ github.ref }} | awk '{print $NF}' FS=/)
-          echo "BRANCH=${raw/origin\/}" >> $GITHUB_ENV
-          echo $BRANCH
-      - run: echo ${{ env.BRANCH }}
-#      - name: Check for valid env
-#        run: |
-#          git rev-parse --abbrev-ref HEAD
-#          export branch_name=$(git rev-parse --abbrev-ref HEAD)
-#          echo $branch_name
-#          echo $GITHUB_ENV
-#      - name: Fail job if not in the right branch
-#        if: ${{ env.ENVIRONMENT == '' }}
-#        run: |
-#          echo "Wrong environment name set"
-#          exit 1
+          echo "Running on default: ${{ steps.branch-name.outputs.current_branch }}"
+
+# jobs:
+#   check_environment:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Check for valid env
+#       if: startsWith(github.ref, 'refs/heads/environment/')
+#       run: |
+#         echo "ENVIRONMENT=true" >> $GITHUB_ENV
+#     - name: Fail job if not in the right branch
+#       if: ${{ env.ENVIRONMENT == '' }}
+#       run: |
+#         echo "Wrong environment name set"
+#         exit 1
+#
+#   build_test_deploy:
+#     needs: check_environment
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v3
+#     - name: Set environment variable and current repository
+#       run: |
+#         echo
+# #         echo "ENVIRONMENT=${GITHUB_REF#refs/*/environment/}" >> $GITHUB_ENV
+# #         echo "REPOSITORY=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+# #         echo "CLI_AWS_REGION=eu-west-1" >> $GITHUB_ENV
 
 
-#    - name: Check for valid env
-##      if: startsWith(github.ref, 'refs/heads/environment/')
-#      run: |
-#        echo "ENVIRONMENT=true" >> $GITHUB_ENV
-#    - name: Fail job if not in the right branch
-#      if: ${{ env.ENVIRONMENT == '' }}
-#      run: |
-#        echo "Wrong environment name set"
-#        exit 1
-#    - name: Checkout
-#      uses: actions/checkout@v3
-#    - name: Set env
-#      run: |
-#        echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-#    - name: Test
-#      run: |
-#        echo ${{ env.RELEASE_VERSION }}
-#    - name: Update the version
-#      run: |
-#        sed -i .bak "s/MARKETING_VERSION[ ].*/MARKETING_VERSION = ${{ env.RELEASE_VERSION }};/g" ios/SchoolyMobile.xcodeproj/project.pbxproj
-#    - name: Install amplify
-#      run: |
-#         npm install -g @aws-amplify/cli@8.2.0
-#         amplify
-##        aws amplify list-apps --profile $AWS_PROFILE --region $AWS_REGION | jq -r '.apps[] | select(.appId) | .appId'
