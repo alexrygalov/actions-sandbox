@@ -34,4 +34,4 @@ jobs:
           else
             ENVIRONMENT=$(echo ${{ steps.branch-name.outputs.current_branch }} |  awk -F '/' '{print $NF}')
           fi
-          echo $ENVIRONMENT >> test_file
+          echo $ENVIRONMENT >> $GITHUB_ENV
