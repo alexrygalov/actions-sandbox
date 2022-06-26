@@ -28,7 +28,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set environment variable and current repository
-        run: >-
+        run: |
           if [[ ${{ steps.branch-name.outputs.current_branch }} == "develop" ]]; then
             ENVIRONMENT=dev-treehive;
           else
