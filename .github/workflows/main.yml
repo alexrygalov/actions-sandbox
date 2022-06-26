@@ -27,7 +27,6 @@ jobs:
           echo "Running on default: ${{ steps.branch-name.outputs.current_branch }}"
 
   build_test_deploy:
-    needs: check_environment
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
