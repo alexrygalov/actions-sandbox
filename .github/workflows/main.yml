@@ -30,8 +30,10 @@ jobs:
       - name: Set environment variable and current repository
         run: |
           if [[ ${{ steps.branch-name.outputs.current_branch }} == "develop2" ]]; then
-            ENVIRONMENT=dev-treehive;
+            ENVIRONMENT=dev-treehive
           else
             ENVIRONMENT=$(echo ${{ steps.branch-name.outputs.current_branch }} |  awk -F '/' '{print $NF}')
           fi
-          echo $ENVIRONMENT
+          echo $ENVIRONMENT >> $GITHUB_ENV
+          echo "REPOSITORY=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+          echo "CLI_AWS_REGION=eu-west-1" >> $GITHUB_ENV
