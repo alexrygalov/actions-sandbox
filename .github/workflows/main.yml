@@ -34,5 +34,4 @@ jobs:
           else
             ENVIRONMENT=$(echo ${{ steps.branch-name.outputs.current_branch }} |  awk -F '/' '{print $NF}')
           fi
-          echo $ENVIRONMENT
-          echo "test1"
+          echo $ENVIRONMENT >> test_file
