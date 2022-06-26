@@ -29,9 +29,4 @@ jobs:
         uses: actions/checkout@v3
       - name: Set environment variable and current repository
         run: |
-          if [[ ${{ steps.branch-name.outputs.current_branch }} == "develop2" ]]; then
-            ENVIRONMENT=dev-treehive
-          else
-            ENVIRONMENT=$(echo ${{ steps.branch-name.outputs.current_branch }} |  awk -F '/' '{print $NF}')
-          fi
-          echo "$ENVIRONMENT" >> $GITHUB_ENV
+          echo "12" >> $GITHUB_ENV
