@@ -17,11 +17,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - run: npm ci
-    - uses: nelonoel/branch-name@v1.0.1
-    # Use branch name for whatever purpose
-    - run: echo ${BRANCH_NAME}
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v5.2
+
+      - name: Running on the default branch.
+        if: steps.branch-name.outputs.is_default == 'true'
+        run: |
+          echo "Running on default: ${{ steps.branch-name.outputs.current_branch }}"
 
 # jobs:
 #   check_environment:
