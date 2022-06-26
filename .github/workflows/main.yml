@@ -25,16 +25,13 @@ jobs:
         if: steps.branch-name.outputs.is_default == 'true'
         run: |
           echo "Running on default: ${{ steps.branch-name.outputs.current_branch }}"
-
-  build_test_deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Set environment variable and current repository
-      run: >-
-        if ${{ steps.branch-name.outputs.current_branch }} == "develop"
-        then ENVIRONMENT=dev-treehive
-        else ENVIRONMENT=${{ steps.branch-name.outputs.current_branch }}
-        fi
-        echo $ENVIRONMENT
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set environment variable and current repository
+        run: >-
+          if [[ ${{ steps.branch-name.outputs.current_branch }} == "develop" ]]; then
+            ENVIRONMENT=dev-treehive;
+          else
+            ENVIRONMENT=${{ steps.branch-name.outputs.current_branch }}
+          fi
+          echo $ENVIRONMENT
