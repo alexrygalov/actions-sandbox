@@ -25,32 +25,13 @@ jobs:
         if: steps.branch-name.outputs.is_default == 'true'
         run: |
           echo "Running on default: ${{ steps.branch-name.outputs.current_branch }}"
-
-# jobs:
-#   check_environment:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Check for valid env
-#       if: startsWith(github.ref, 'refs/heads/environment/')
-#       run: |
-#         echo "ENVIRONMENT=true" >> $GITHUB_ENV
-#     - name: Fail job if not in the right branch
-#       if: ${{ env.ENVIRONMENT == '' }}
-#       run: |
-#         echo "Wrong environment name set"
-#         exit 1
-#
-#   build_test_deploy:
-#     needs: check_environment
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Checkout
-#       uses: actions/checkout@v3
-#     - name: Set environment variable and current repository
-#       run: |
-#         echo
-# #         echo "ENVIRONMENT=${GITHUB_REF#refs/*/environment/}" >> $GITHUB_ENV
-# #         echo "REPOSITORY=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-# #         echo "CLI_AWS_REGION=eu-west-1" >> $GITHUB_ENV
-
-
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set environment variable and current repository
+        run: |
+          if [[ ${{ steps.branch-name.outputs.current_branch }} == "develop" ]]; then
+            ENVIRONMENT=dev-treehive;
+          else
+            ENVIRONMENT=${{ steps.branch-name.outputs.current_branch }}
+          fi
+          echo $ENVIRONMENT
