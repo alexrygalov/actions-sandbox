@@ -52,3 +52,5 @@ jobs:
 # #         echo "ENVIRONMENT=${GITHUB_REF#refs/*/environment/}" >> $GITHUB_ENV
 # #         echo "REPOSITORY=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 # #         echo "CLI_AWS_REGION=eu-west-1" >> $GITHUB_ENV
+
+
