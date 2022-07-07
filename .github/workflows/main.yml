@@ -3,6 +3,7 @@ name: build-and-deploy
 on:
   push:
     branches:
+      - master
       - develop2
       - environment/**
       - '!environment/prod-**'
@@ -13,6 +14,10 @@ on:
         required: true
         default: 'false'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,31 +26,6 @@ jobs:
     - run: npm ci
     - uses: nelonoel/branch-name@v1.0.1
     # Use branch name for whatever purpose
-    - run: echo ${BRANCH_NAME}
-
-# jobs:
-#   check_environment:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Check for valid env
-#       if: startsWith(github.ref, 'refs/heads/environment/')
-#       run: |
-#         echo "ENVIRONMENT=true" >> $GITHUB_ENV
-#     - name: Fail job if not in the right branch
-#       if: ${{ env.ENVIRONMENT == '' }}
-#       run: |
-#         echo "Wrong environment name set"
-#         exit 1
-#
-#   build_test_deploy:
-#     needs: check_environment
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Checkout
-#       uses: actions/checkout@v3
-#     - name: Set environment variable and current repository
-#       run: |
-#         echo
-# #         echo "ENVIRONMENT=${GITHUB_REF#refs/*/environment/}" >> $GITHUB_ENV
-# #         echo "REPOSITORY=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-# #         echo "CLI_AWS_REGION=eu-west-1" >> $GITHUB_ENV
+    - run: |
+        echo ${BRANCH_NAME}
+        sleep 100
